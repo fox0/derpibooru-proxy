@@ -1,14 +1,17 @@
 {% extends "base" %}
 
 {% block content %}
-  q: {{ q }}
-  <br>
-  Total: {{ ls.total }}
-  <br>
+  <!-- todo include -->
+  <form action="/images" method="get">
+    <input type="text" name="q" value="{{ params.q }}" style="width: 50%;"/>
+    <input type="submit" value="Искать"/>
+  </form>
+  <p>Total: {{ ls.total }}</p>
+
   {% for i in ls.images %}
     <div class="thumb">
-      <!-- todo upvotes -->
-      <a href="/images/{{ i.id }}" title="{{ i.title }}">
+      <span>{{ i.faves }} / [{{ i.upvotes }} {{ i.score }} {{ i.downvotes }}]</span>
+      <a href="{{ i.representations.large }}" target="_blank" title="{{ i.title }}">
         {% if i.mime_type == "video/webm" %}
           <video src="{{ i.representations.thumb }}" autoplay muted loop></video>
         {% else %}
@@ -17,4 +20,17 @@
       </a>
     </div>
   {% endfor %}
+  //todo pagination
+  {{ ls.total / 25 }}
+
+<a href="/images?q=first_seen_at.gt:3 days ago&sf=wilson_score&sd=desc">3 ddd</a>
+
+  <form action="/images" method="get">
+    <input type="text" name="q" value="{{ params.q }}" style="width: 50%;"/>
+    <input type="text" name="sd" value="{{ params.sd }}"/>
+    <input type="text" name="sf" value="{{ params.sf }}"/>
+    <input type="text" name="page" value="{{ params.page + 1 }}"/>
+    <input type="submit" value="page + 1"/>
+  </form>
 {% endblock content %}
+

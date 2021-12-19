@@ -1,24 +1,18 @@
 use crate::config::CONFIG;
-use crate::models::SearchImages;
+use crate::models::{Parameters, SearchImages};
 
 use reqwest::blocking::Client;
 use reqwest::Proxy;
 
 const APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
-pub fn search_images<T: Into<String>>(
-    q: T,
-    page: Option<u32>,
-) -> Result<SearchImages, reqwest::Error> {
+pub fn search_images(params: &Parameters) -> Result<SearchImages, reqwest::Error> {
     let text = get_client()?
         .get(format!("{}{}", &CONFIG.host, "/api/v1/json/search/images"))
-        .query(&[
-            ("key", &CONFIG.api_key),
-            ("q", &q.into()),
-            ("page", &page.unwrap_or(1).to_string()),
-        ])
+        .query(params)
         .send()?
         .text()?;
+    // dbg!(&text);
     Ok(serde_json::from_str(text.as_str()).unwrap())
 }
 

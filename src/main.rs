@@ -6,7 +6,8 @@ mod config;
 mod models;
 
 use crate::api::search_images;
-use crate::models::SearchImages;
+use crate::config::CONFIG;
+use crate::models::{Parameters, SearchImages};
 
 use dotenv::dotenv;
 use rocket::response::Redirect;
@@ -17,22 +18,37 @@ use serde::Serialize;
 /// Главная страница
 #[get("/")]
 fn index() -> Redirect {
-    Redirect::to(uri!(images: page = _))
+    Redirect::to(uri!(images: page = _, q = _, sf = _, sd = _))
 }
 
 #[derive(Serialize)]
 struct ContextImages {
-    q: String,
+    params: Parameters,
     ls: SearchImages,
 }
 
-#[get("/images?<page>")]
-fn images(page: Option<u32>) -> Result<Template, reqwest::Error> {
-    let q = "*".to_string(); //todo get param
-    let ls = search_images(&q, page)?;
-    Ok(Template::render("images", &ContextImages { q, ls }))
+#[get("/images?<page>&<q>&<sd>&<sf>")]
+fn images(
+    page: Option<u32>,
+    q: Option<String>,
+    sf: Option<String>,
+    sd: Option<String>,
+) -> Result<Template, reqwest::Error> {
+    let page = page.unwrap_or(1);
+    let q = q.unwrap_or_else(|| "*".to_string());
+    let params = Parameters {
+        key: CONFIG.api_key.clone(), // абстракция протекла, и фиг с ней
+        page,
+        per_page: Some(40), // todo
+        q,
+        sf, // todo
+        sd, // todo
+    };
+    let ls = search_images(&params)?;
+    Ok(Template::render("images", &ContextImages { params, ls }))
 }
 
+// todo + tags
 #[get("/images/<id>")]
 fn image(id: u32) -> Result<Template, reqwest::Error> {
     todo!()
@@ -43,6 +59,5 @@ fn main() {
     rocket::ignite()
         .mount("/", routes![index, images, image])
         .attach(Template::fairing())
-        // todo custom error handler
         .launch();
 }
