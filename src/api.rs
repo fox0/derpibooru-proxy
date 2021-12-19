@@ -6,13 +6,16 @@ use reqwest::Proxy;
 
 const APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
-pub fn search_images<T: Into<String>>(q: T, page: u32) -> Result<SearchImages, reqwest::Error> {
+pub fn search_images<T: Into<String>>(
+    q: T,
+    page: Option<u32>,
+) -> Result<SearchImages, reqwest::Error> {
     let text = get_client()?
         .get(format!("{}{}", &CONFIG.host, "/api/v1/json/search/images"))
         .query(&[
             ("key", &CONFIG.api_key),
             ("q", &q.into()),
-            ("page", &page.to_string()),
+            ("page", &page.unwrap_or(1).to_string()),
         ])
         .send()?
         .text()?;

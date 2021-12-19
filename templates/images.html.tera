@@ -1,0 +1,20 @@
+{% extends "base" %}
+
+{% block content %}
+  q: {{ q }}
+  <br>
+  Total: {{ ls.total }}
+  <br>
+  {% for i in ls.images %}
+    <div class="thumb">
+      <!-- todo upvotes -->
+      <a href="/images/{{ i.id }}" title="{{ i.title }}">
+        {% if i.mime_type == "video/webm" %}
+          <video src="{{ i.representations.thumb }}" autoplay muted loop></video>
+        {% else %}
+          <img alt="{{ i.title }}" src="{{ i.representations.thumb }}"/>
+        {% endif %}
+      </a>
+    </div>
+  {% endfor %}
+{% endblock content %}

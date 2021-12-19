@@ -11,7 +11,6 @@ const TOR: &str = "socks5h://127.0.0.1:9050";
 
 /// Конфиг приложения
 /// заполняется из переменных окружения `DERPI_KEY`, `DERPI_USE_TOR`. `https_proxy` и файла .env
-#[cfg_attr(debug_assertions, derive(Debug))]
 pub struct Config {
     pub api_key: String,
     pub host: String,
@@ -28,13 +27,10 @@ impl Config {
         if is_use_tor && https_proxy.is_none() {
             https_proxy = Some(TOR.into());
         }
-        let config = Self {
+        Self {
             api_key,
             host,
             https_proxy,
-        };
-        #[cfg(debug_assertions)]
-        dbg!(&config);
-        config
+        }
     }
 }

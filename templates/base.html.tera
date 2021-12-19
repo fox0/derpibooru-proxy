@@ -1,0 +1,15 @@
+<html>
+<head>
+<style>
+.thumb {
+  max-height: 250px;
+  max-width: 250px;
+  display: inline-block;
+  margin: 0 6px 6px 0;
+}
+</style>
+</head>
+<body>
+{% block content %}{% endblock content %}
+</body>
+</html>
