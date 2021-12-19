@@ -1,6 +1,16 @@
+cargo-features = ["strip"]
+
 [package]
 name = "derpibooru-proxy"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+strip = true
+lto = true
+
 [dependencies]
+lazy_static = "1.4.0"
+dotenv = "0.15.0"
+
+rocket = "0.4.10"
