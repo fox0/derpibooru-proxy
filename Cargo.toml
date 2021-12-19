@@ -10,7 +10,8 @@ strip = true
 lto = true
 
 [dependencies]
-lazy_static = "1.4.0"
-dotenv = "0.15.0"
+lazy_static = "*"
+dotenv = "*"
 
-rocket = "0.4.10"
+rocket = "*"
+reqwest = { version = "*", features = ["blocking", "socks"] }

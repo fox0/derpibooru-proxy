@@ -1,4 +1,3 @@
-use dotenv::dotenv;
 use lazy_static::lazy_static;
 use std::env;
 
@@ -21,7 +20,6 @@ pub struct Config {
 
 impl Config {
     fn new() -> Self {
-        dotenv().ok();
         let api_key = env::var("DERPI_KEY").expect("you must set `DERPI_KEY` environment variable");
         let is_use_tor = env::var("DERPI_USE_TOR").unwrap_or_else(|_| "0".into()) == "1";
         let host = if is_use_tor { HOST_TOR } else { HOST };
