@@ -15,3 +15,5 @@ dotenv = "*"
 
 rocket = "*"
 reqwest = { version = "*", features = ["blocking", "socks"] }
+serde = { version = "*", features = ["derive"] }
+serde_json = "*"
