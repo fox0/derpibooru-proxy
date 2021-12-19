@@ -38,12 +38,11 @@ pub struct Image {
 }
 
 impl Image {
-    #[inline(always)]
     pub fn get_title(&self) -> String {
         format!(
             "Size: {}x{} | Tagged: {}",
-            self.height,
             self.width,
+            self.height,
             self.tags.join(" ")
         )
     }

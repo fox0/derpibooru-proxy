@@ -4,60 +4,20 @@
 mod api;
 mod config;
 mod models;
+mod views;
 
-use crate::api::search_images;
+use crate::views::{images, index};
 
 use dotenv::dotenv;
-use rocket::response::content;
-use rocket::{get, routes};
-
-#[get("/")]
-fn index() -> Result<content::Html<String>, reqwest::Error> {
-    let mut result = String::new();
-    let ls = search_images("*")?;
-    for i in ls.images {
-        let title = i.get_title();
-        result += format!(
-            r#"<div class="thumb">
-              <!-- todo upvotes -->
-              <a href="/images/{}" title="{}">
-                <img alt="{}" src="{}"/>
-              </a>
-            </div>"#,
-            i.id, title, title, i.representations.thumb
-        )
-        .as_str();
-    }
-    let result = format!(
-        r#"<!doctype html>
-          <html>
-          <head>
-          <style>
-          .thumb {{
-            max-height: 250px;
-            max-width: 250px;
-            display: inline-block;
-            margin: 0 6px 6px 0;
-          }}
-          </style>
-          </head>
-          <body>{}</body>
-          </html>"#,
-        result
-    );
-    Ok(content::Html(result))
-}
-
-// #[get("/<name>/<age>")]
-// fn hello(name: String, age: u8) -> String {
-//     format!("Hello, {} year old named {}!", age, name)
-// }
+use rocket::http::Method;
+use rocket::Route;
 
 fn main() {
     dotenv().ok();
-    rocket::ignite()
-        .mount("/", routes![index])
-        // .mount("/hello", routes![hello])
-        // todo custom error handler
-        .launch();
+    let routes = vec![
+        Route::new(Method::Get, "/", index),
+        Route::new(Method::Get, "/images", images),
+        // Route::new(Method::Get, "/images?<page>", images),
+    ];
+    rocket::ignite().mount("/", routes).launch();
 }
