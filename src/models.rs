@@ -1,5 +1,9 @@
+use crate::config::CONFIG;
+
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Serialize, Serializer};
+
+const PER_PAGE: u32 = 40;
 
 /// The current sort field
 #[allow(non_camel_case_types)]
@@ -27,18 +31,47 @@ pub struct Parameters {
     /// An optional authentication token.
     /// If omitted, no user will be authenticated.
     pub key: String,
+    /// The current search query, if the request is a search request.
+    pub q: Option<String>,
     /// Controls the current page of the response, if the response is paginated.
     /// Empty values default to the first page.
-    pub page: u32,
+    pub page: Option<u32>,
     /// Controls the number of results per page, up to a limit of 50, if the response is paginated.
     /// The default is 25.
     pub per_page: Option<u32>,
-    /// The current search query, if the request is a search request.
-    pub q: String,
     /// The current sort field, if the request is a search request.
     pub sf: Option<String>, //todo
     /// The current sort direction, if the request is a search request.
     pub sd: Option<String>, //todo
+}
+
+impl Parameters {
+    pub fn new(
+        page: Option<u32>,
+        q: Option<String>,
+        sf: Option<String>,
+        sd: Option<String>,
+    ) -> Self {
+        Self {
+            key: CONFIG.api_key.clone(),
+            q: Option::from(q.unwrap_or_else(|| "*".to_string())),
+            page: Option::from(page.unwrap_or(1)),
+            per_page: Some(PER_PAGE),
+            sf,
+            sd,
+        }
+    }
+
+    pub fn new_only_key() -> Self {
+        Self {
+            key: CONFIG.api_key.clone(),
+            q: None,
+            page: None,
+            per_page: None,
+            sf: None,
+            sd: None,
+        }
+    }
 }
 
 /// Прямые ссылки на CDN

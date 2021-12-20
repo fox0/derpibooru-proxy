@@ -5,8 +5,6 @@ mod api;
 mod config;
 mod models;
 
-use crate::api::{search_images, ApiError};
-use crate::config::CONFIG;
 use crate::models::{Parameters, SearchImages};
 
 use dotenv::dotenv;
@@ -28,18 +26,9 @@ fn search(
     q: Option<String>,
     sf: Option<String>,
     sd: Option<String>,
-) -> Result<Template, ApiError> {
-    let page = page.unwrap_or(1);
-    let q = q.unwrap_or_else(|| "*".to_string());
-    let params = Parameters {
-        key: CONFIG.api_key.clone(), // абстракция протекла, и фиг с ней
-        page,
-        per_page: Some(40), // todo
-        q,
-        sf, // todo
-        sd, // todo
-    };
-    let images = search_images(&params)?;
+) -> Result<Template, api::Error> {
+    let params = Parameters::new(page, q, sf, sd);
+    let images = api::search_images(&params)?;
     {
         #[derive(Serialize)]
         struct Context {
@@ -51,9 +40,10 @@ fn search(
 }
 
 // todo + tags
-#[get("/images/<id>")]
-fn image(id: u32) -> Result<Template, reqwest::Error> {
-    todo!()
+#[get("/images/<image_id>")]
+fn image(image_id: u32) -> Result<String, api::Error> {
+    let image = api::images(image_id)?;
+    Ok("ok".into())
 }
 
 fn main() {

@@ -10,6 +10,7 @@ strip = true
 lto = true
 
 [dependencies]
+#thiserror = "*"
 lazy_static = "*"
 dotenv = "*"
 reqwest = { version = "*", features = ["blocking", "socks"] }

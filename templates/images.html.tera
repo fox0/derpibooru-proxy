@@ -11,7 +11,7 @@
   {% for i in images.images %}
     <div class="thumb">
       <span>{{ i.faves }} / [{{ i.upvotes }} {{ i.score }} {{ i.downvotes }}]</span>
-      <a href="{{ i.representations.large }}" target="_blank" title="{{ i.title }}">
+      <a href="/images/{{ i.id }}" target="_blank" title="{{ i.title }}">
         {% if i.mime_type == "video/webm" %}
           <video src="{{ i.representations.thumb }}" autoplay muted loop></video>
         {% else %}
