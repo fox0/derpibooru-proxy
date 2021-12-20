@@ -2,13 +2,13 @@
 
 {% block content %}
   <!-- todo include -->
-  <form action="/images" method="get">
+  <form action="/search" method="get">
     <input type="text" name="q" value="{{ params.q }}" style="width: 50%;"/>
     <input type="submit" value="Искать"/>
   </form>
-  <p>Total: {{ ls.total }}</p>
+  <p>Total: {{ images.total }}</p>
 
-  {% for i in ls.images %}
+  {% for i in images.images %}
     <div class="thumb">
       <span>{{ i.faves }} / [{{ i.upvotes }} {{ i.score }} {{ i.downvotes }}]</span>
       <a href="{{ i.representations.large }}" target="_blank" title="{{ i.title }}">
@@ -21,11 +21,11 @@
     </div>
   {% endfor %}
   //todo pagination
-  {{ ls.total / 25 }}
+  {{ images.total / 25 }}
 
-<a href="/images?q=first_seen_at.gt:3 days ago&sf=wilson_score&sd=desc">3 ddd</a>
+<a href="/search?q=first_seen_at.gt:3 days ago&sf=wilson_score&sd=desc">3 ddd</a>
 
-  <form action="/images" method="get">
+  <form action="/search" method="get">
     <input type="text" name="q" value="{{ params.q }}" style="width: 50%;"/>
     <input type="text" name="sd" value="{{ params.sd }}"/>
     <input type="text" name="sf" value="{{ params.sf }}"/>

@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize, Serializer};
 
 /// The current sort field
 #[allow(non_camel_case_types)]
+#[cfg_attr(debug_assertions, derive(Debug))]
 #[derive(Serialize)]
 pub enum SortField {
     wilson_score,
@@ -11,6 +12,7 @@ pub enum SortField {
 
 /// The current sort direction
 #[allow(non_camel_case_types)]
+#[cfg_attr(debug_assertions, derive(Debug))]
 #[derive(Serialize)]
 pub enum SortDirection {
     desc,
@@ -77,19 +79,20 @@ pub struct Image {
     /// One of "image/gif", "image/jpeg", "image/png", "image/svg+xml", "video/webm".
     pub mime_type: String,
 
-    #[serde(skip_deserializing)]
-    pub title: Option<String>,
-
-    // поля ниже не используются в шаблоне
     /// The image's height, in pixels.
+    #[serde(skip_serializing)]
     pub height: u32,
     /// The image's width, in pixels.
+    #[serde(skip_serializing)]
     pub width: u32,
     /// The image's view URL, including tags.
+    #[serde(skip_serializing)]
     pub view_url: String, //todo Option?
     /// A list of tag names the image contains.
+    #[serde(skip_serializing)]
     pub tags: Vec<String>,
     /// The current source URL of the image.
+    #[serde(skip_serializing)]
     pub source_url: Option<String>,
     // pub size: u32,
     // pub uploader: String,
@@ -98,6 +101,8 @@ pub struct Image {
     // pub tag_count: u32,
     // pub intensities
     // pub sha512_hash: String,
+    #[serde(skip_deserializing)]
+    pub title: Option<String>,
 }
 
 impl Image {

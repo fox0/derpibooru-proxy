@@ -5,7 +5,7 @@ mod api;
 mod config;
 mod models;
 
-use crate::api::search_images;
+use crate::api::{search_images, ApiError};
 use crate::config::CONFIG;
 use crate::models::{Parameters, SearchImages};
 
@@ -18,22 +18,17 @@ use serde::Serialize;
 /// Главная страница
 #[get("/")]
 fn index() -> Redirect {
-    Redirect::to(uri!(images: page = _, q = _, sf = _, sd = _))
+    // todo картинки + следилка + за последние 3 дня 4-8 картинок + feached
+    Redirect::to(uri!(search: page = _, q = _, sf = _, sd = _))
 }
 
-#[derive(Serialize)]
-struct ContextImages {
-    params: Parameters,
-    ls: SearchImages,
-}
-
-#[get("/images?<page>&<q>&<sd>&<sf>")]
-fn images(
+#[get("/search?<page>&<q>&<sd>&<sf>")]
+fn search(
     page: Option<u32>,
     q: Option<String>,
     sf: Option<String>,
     sd: Option<String>,
-) -> Result<Template, reqwest::Error> {
+) -> Result<Template, ApiError> {
     let page = page.unwrap_or(1);
     let q = q.unwrap_or_else(|| "*".to_string());
     let params = Parameters {
@@ -44,8 +39,15 @@ fn images(
         sf, // todo
         sd, // todo
     };
-    let ls = search_images(&params)?;
-    Ok(Template::render("images", &ContextImages { params, ls }))
+    let images = search_images(&params)?;
+    {
+        #[derive(Serialize)]
+        struct Context {
+            params: Parameters,
+            images: SearchImages,
+        }
+        Ok(Template::render("images", &Context { params, images }))
+    }
 }
 
 // todo + tags
@@ -57,7 +59,7 @@ fn image(id: u32) -> Result<Template, reqwest::Error> {
 fn main() {
     dotenv().ok();
     rocket::ignite()
-        .mount("/", routes![index, images, image])
+        .mount("/", routes![index, search, image])
         .attach(Template::fairing())
         .launch();
 }
