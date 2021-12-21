@@ -11,12 +11,12 @@ lto = true
 
 [dependencies]
 #thiserror = "*"
-lazy_static = "*"
-dotenv = "*"
-reqwest = { version = "*", features = ["blocking", "socks"] }
+lazy_static = "1.*"
+dotenv = "0.*"
+reqwest = { version = "0.11.*", features = ["blocking", "socks"] }
 
-serde = { version = "*", features = ["derive"] }
-serde_json = "*"
+serde = { version = "1.0.*", features = ["derive"] }
+serde_json = "1.0.*"
 
-rocket = "*"
-rocket_contrib = { version = "*", features = ["tera_templates"], default-features = false }
+rocket = "0.4.*"
+tera = "1.15"
