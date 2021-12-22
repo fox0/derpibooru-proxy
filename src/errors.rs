@@ -32,7 +32,7 @@ impl From<tera::Error> for Error {
 impl<'r> Responder<'r> for Error {
     fn respond_to(self, _: &Request) -> Result<Response<'r>, Status> {
         // todo html
-        let body = format!("ERROR: {:?}", self);
+        let body = format!("{:?}", self);
         Response::build()
             .status(Status::InternalServerError)
             .sized_body(Cursor::new(body))

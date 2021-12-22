@@ -5,15 +5,17 @@ mod api;
 mod config;
 mod errors;
 mod models;
+mod templates;
 
 use crate::errors::Error;
-use crate::models::{Parameters, SearchImages};
+use crate::models::Parameters;
+use crate::templates::TEMPLATES;
 
 use dotenv::dotenv;
-use rocket::response::{content, Redirect};
-use rocket::{get, routes, uri, Rocket, State};
-use serde::Serialize;
-use tera::{Context as TeraContext, Tera};
+use rocket::response::content::Html;
+use rocket::response::Redirect;
+use rocket::{get, routes, uri, Rocket};
+use tera::Context;
 
 /// Главная страница
 #[get("/")]
@@ -25,24 +27,18 @@ fn index() -> Redirect {
 #[allow(clippy::needless_pass_by_value)]
 #[get("/search?<page>&<q>&<sd>&<sf>")]
 fn search(
-    templates: State<Tera>,
     page: Option<u32>,
     q: Option<String>,
     sf: Option<String>,
     sd: Option<String>,
-) -> Result<content::Html<String>, Error> {
+) -> Result<Html<String>, Error> {
     let params = Parameters::new(page, q, sf, sd);
     let images = api::search_images(&params)?;
-    {
-        #[derive(Serialize)]
-        struct Context {
-            params: Parameters,
-            images: SearchImages,
-        }
-        let context = TeraContext::from_serialize(Context { params, images })?;
-        let result = templates.render("search", &context)?;
-        Ok(content::Html(result))
-    }
+
+    let mut context = Context::new();
+    context.insert("params", &params);
+    context.insert("images", &images);
+    Ok(Html(TEMPLATES.render("search", &context)?))
 }
 
 // todo + tags
@@ -54,17 +50,7 @@ fn image(image_id: u32) -> Result<String, Error> {
 
 fn main() {
     dotenv().ok();
-
-    let mut templates = Tera::default();
-    templates
-        .add_raw_templates(vec![
-            ("base", include_str!("templates/base.html")),
-            ("search", include_str!("templates/search.html")),
-        ])
-        .unwrap();
-
     Rocket::ignite()
         .mount("/", routes![index, search, image])
-        .manage(templates)
         .launch();
 }
