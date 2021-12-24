@@ -11,7 +11,6 @@ use crate::errors::Error;
 use crate::models::Parameters;
 use crate::templates::TEMPLATES;
 
-use dotenv::dotenv;
 use rocket::response::content::Html;
 use rocket::response::Redirect;
 use rocket::{get, routes, uri, Rocket};
@@ -44,12 +43,17 @@ fn search(
 // todo + tags
 #[get("/images/<image_id>")]
 fn image(image_id: u32) -> Result<String, Error> {
-    let image = api::images(image_id)?;
+    // let image = api::images(image_id)?;
     Ok("ok".into())
 }
 
 fn main() {
+    // use crate::config::CONFIG;
+    use dotenv::dotenv;
+
     dotenv().ok();
+    // lazy_static::initialize(&CONFIG);
+    // lazy_static::initialize(&TEMPLATES);
     Rocket::ignite()
         .mount("/", routes![index, search, image])
         .launch();
