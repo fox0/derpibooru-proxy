@@ -9,9 +9,8 @@ mod templates;
 
 use crate::errors::Error;
 use crate::models::Parameters;
-use crate::templates::TEMPLATES;
+use crate::templates::{render, Template};
 
-use rocket::response::content::Html;
 use rocket::response::Redirect;
 use rocket::{get, routes, uri, Rocket};
 use tera::Context;
@@ -30,22 +29,22 @@ fn search(
     q: Option<String>,
     sf: Option<String>,
     sd: Option<String>,
-) -> Result<Html<String>, Error> {
+) -> Result<Template, Error> {
     let params = Parameters::new(page, q, sf, sd);
     let images = api::search_images(&params)?;
 
     let mut context = Context::new();
     context.insert("params", &params);
     context.insert("images", &images);
-    Ok(Html(TEMPLATES.render("search", &context)?))
+    render("search", &mut context)
 }
 
-// todo + tags
-#[get("/images/<image_id>")]
-fn image(image_id: u32) -> Result<String, Error> {
-    // let image = api::images(image_id)?;
-    Ok("ok".into())
-}
+// // todo + tags
+// #[get("/images/<image_id>")]
+// fn image(image_id: u32) -> Result<String, Error> {
+//     // let image = api::images(image_id)?;
+//     Ok("ok".into())
+// }
 
 fn main() {
     // use crate::config::CONFIG;
@@ -55,6 +54,6 @@ fn main() {
     // lazy_static::initialize(&CONFIG);
     // lazy_static::initialize(&TEMPLATES);
     Rocket::ignite()
-        .mount("/", routes![index, search, image])
+        .mount("/", routes![index, search /*, image*/])
         .launch();
 }

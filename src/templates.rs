@@ -1,8 +1,12 @@
+use crate::errors::Error;
+use crate::models::SortDirection;
+
 use lazy_static::lazy_static;
-use tera::Tera;
+use rocket::response::content::Html;
+use tera::{Context, Tera};
 
 lazy_static! {
-    pub static ref TEMPLATES: Tera = {
+    static ref TEMPLATES: Tera = {
         let mut result = Tera::default();
         result.add_raw_templates(RAW_TEMPLATES).unwrap();
         result
@@ -15,3 +19,17 @@ const RAW_TEMPLATES: [(&str, &str); 4] = [
     ("base", include_str!("templates/base.html")),
     ("search", include_str!("templates/search.html")),
 ];
+
+pub type Template = Html<String>;
+
+/// ```
+/// let mut context = Context::new();
+/// context.insert("images", &images);
+/// render("search", &mut context)
+/// ```
+pub fn render(template_name: &str, context: &mut Context) -> Result<Template, Error> {
+    // add context_processor
+    context.insert("sd", &SortDirection::get_choices());
+    let result = TEMPLATES.render(template_name, context)?;
+    Ok(Html(result))
+}

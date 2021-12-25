@@ -36,13 +36,13 @@ impl<'r> Responder<'r> for Error {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use crate::Error;
-
-    #[test]
-    fn from1() {
-        // fn get_error() -> Result<(), Error> {}
-        assert_eq!(2 + 2, 4);
-    }
-}
+// #[cfg(test)]
+// mod tests {
+//     use crate::Error;
+//
+//     #[test]
+//     fn from1() {
+//         // fn get_error() -> Result<(), Error> {}
+//         assert_eq!(2 + 2, 4);
+//     }
+// }

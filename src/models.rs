@@ -19,8 +19,17 @@ pub enum SortField {
 #[cfg_attr(debug_assertions, derive(Debug))]
 #[derive(Serialize)]
 pub enum SortDirection {
+    /// Ascending
+    asc,
+    /// Descending
     desc,
-    //todo
+}
+
+impl SortDirection {
+    // todo derive
+    pub const fn get_choices() -> [(&'static str, &'static str); 2] {
+        [("desc", "Descending"), ("asc", "Ascending")]
+    }
 }
 
 /// This is a list of general parameters that are useful when working with the API.
