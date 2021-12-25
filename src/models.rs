@@ -14,6 +14,32 @@ pub enum SortField {
     //todo
 }
 
+impl SortField {
+    // todo derive
+    pub const fn get_choices() -> [(&'static str, &'static str); 17] {
+        [
+            ("id", "Sort by image ID"),
+            ("updated_at", "Sort by last modification date"),
+            ("first_seen_at", "Sort by initial post date"),
+            ("aspect_ratio", "Sort by aspect ratio"),
+            ("faves", "Sort by fave count"),
+            ("upvotes", "Sort by upvotes"),
+            ("downvotes", "Sort by downvotes"),
+            ("score", "Sort by score"),
+            ("wilson_score", "Sort by Wilson score"),
+            ("_score", "Sort by relevance"),
+            ("width", "Sort by width"),
+            ("height", "Sort by height"),
+            ("comment_count", "Sort by comments"),
+            ("tag_count", "Sort by tag count"),
+            ("pixels", "Sort by pixels"),
+            ("size", "Sort by file size"),
+            ("duration", "Sort by duration"),
+            // ("random:324483087", "Random!"),
+        ]
+    }
+}
+
 /// The current sort direction
 #[allow(non_camel_case_types)]
 #[cfg_attr(debug_assertions, derive(Debug))]
@@ -49,9 +75,9 @@ pub struct Parameters {
     /// The default is 25.
     pub per_page: Option<u32>,
     /// The current sort field, if the request is a search request.
-    pub sf: Option<String>, //todo
+    pub sf: Option<String>, //todo enum
     /// The current sort direction, if the request is a search request.
-    pub sd: Option<String>, //todo
+    pub sd: Option<String>, //todo enum
 }
 
 impl Parameters {

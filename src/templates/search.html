@@ -21,21 +21,32 @@
     <!-- в теории данные все есть, так что упаковываем в json и на статическую страницу! -->
     </div>
   {% endfor %}
-  //todo pagination
-  {{ images.total / 25 }}
+
+  <div class="pagination">
+    {% for i in range(start=1, end=(images.total / 40)|int) %}
+      {% if i == params.page %}
+        <strong>{{ i }}</strong>
+      {% else %}
+        <a href="/search?q={{ params.q }}&sf={{ params.sf }}&sd={{ params.sd }}&page={{ i }}">{{ i }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
 
 <a href="/search?q=first_seen_at.gt:3 days ago&sf=wilson_score&sd=desc">3 ddd</a>
 
   <form action="/search" method="get">
     <input type="text" name="q" value="{{ params.q }}" style="width: 50%;"/>
+    <select name="sf" autocomplete="off">
+      {% for i in sf %}
+        <option value="{{ i.0 }}"{% if i.0 == params.sf %} selected{% endif %}>{{ i.1 }}</option>
+      {% endfor %}
+    </select>
     <select name="sd" autocomplete="off">
       {% for i in sd %}
         <option value="{{ i.0 }}"{% if i.0 == params.sd %} selected{% endif %}>{{ i.1 }}</option>
       {% endfor %}
     </select>
-    <input type="text" name="sf" value="{{ params.sf }}"/>
-    <input type="text" name="page" value="{{ params.page + 1 }}"/>
-    <input type="submit" value="page + 1"/>
+    <input type="submit" value="Найти"/>
   </form>
 {% endblock content %}
 

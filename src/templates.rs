@@ -1,5 +1,5 @@
 use crate::errors::Error;
-use crate::models::SortDirection;
+use crate::models::{SortDirection, SortField};
 
 use lazy_static::lazy_static;
 use rocket::response::content::Html;
@@ -29,6 +29,7 @@ pub type Template = Html<String>;
 /// ```
 pub fn render(template_name: &str, context: &mut Context) -> Result<Template, Error> {
     // add context_processor
+    context.insert("sf", &SortField::get_choices());
     context.insert("sd", &SortDirection::get_choices());
     let result = TEMPLATES.render(template_name, context)?;
     Ok(Html(result))
