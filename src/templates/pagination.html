@@ -1,0 +1,18 @@
+<div class="pagination">
+  {% if pagination.current_page == 1 %}
+    First
+    Prev
+  {% else %}
+    <a href="/search?q={{ params.q }}&sf={{ params.sf }}&sd={{ params.sd }}&page=1">First</a>
+    <a href="/search?q={{ params.q }}&sf={{ params.sf }}&sd={{ params.sd }}&page={{ pagination.current_page - 1 }}">Prev</a>
+  {% endif %}
+  <strong>{{ pagination.current_page }}</strong>
+  {% if pagination.current_page == pagination.last_page %}
+    Next
+    Last
+  {% else %}
+    <a href="/search?q={{ params.q }}&sf={{ params.sf }}&sd={{ params.sd }}&page={{ pagination.current_page + 1 }}">Next</a>
+    <a href="/search?q={{ params.q }}&sf={{ params.sf }}&sd={{ params.sd }}&page={{ pagination.last_page }}">Last</a>
+  {% endif %}
+  Total: {{ pagination.total }}
+</div>

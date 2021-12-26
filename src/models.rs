@@ -5,6 +5,24 @@ use serde::{Deserialize, Serialize, Serializer};
 
 const PER_PAGE: u32 = 40;
 
+#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Serialize)]
+pub struct Pagination {
+    current_page: u32,
+    last_page: u32,
+    total: u32,
+}
+
+impl Pagination {
+    pub fn new(current_page: u32, total: u32) -> Self {
+        Self {
+            current_page,
+            last_page: total / PER_PAGE + 1,
+            total,
+        }
+    }
+}
+
 /// The current sort field
 #[allow(non_camel_case_types)]
 #[cfg_attr(debug_assertions, derive(Debug))]

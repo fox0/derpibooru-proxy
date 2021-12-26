@@ -1,12 +1,12 @@
 {% extends "base" %}
 
+{% block title %}{{ params.q }}{% endblock title %}
+
 {% block content %}
-  <!-- todo include -->
   <form action="/search" method="get">
     <input type="text" name="q" value="{{ params.q }}" style="width: 50%;"/>
-    <input type="submit" value="Искать"/>
+    <input type="submit" value="Search"/>
   </form>
-  <p>Total: {{ images.total }}</p>
 
   {% for i in images.images %}
     <div class="thumb">
@@ -22,15 +22,7 @@
     </div>
   {% endfor %}
 
-  <div class="pagination">
-    {% for i in range(start=1, end=(images.total / 40)|int) %}
-      {% if i == params.page %}
-        <strong>{{ i }}</strong>
-      {% else %}
-        <a href="/search?q={{ params.q }}&sf={{ params.sf }}&sd={{ params.sd }}&page={{ i }}">{{ i }}</a>
-      {% endif %}
-    {% endfor %}
-  </div>
+  {% include "pagination" %}
 
 <a href="/search?q=first_seen_at.gt:3 days ago&sf=wilson_score&sd=desc">3 ddd</a>
 
@@ -46,7 +38,7 @@
         <option value="{{ i.0 }}"{% if i.0 == params.sd %} selected{% endif %}>{{ i.1 }}</option>
       {% endfor %}
     </select>
-    <input type="submit" value="Найти"/>
+    <input type="submit" value="Search"/>
   </form>
 {% endblock content %}
 

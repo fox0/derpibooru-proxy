@@ -13,10 +13,11 @@ lazy_static! {
     };
 }
 
-const RAW_TEMPLATES: [(&str, &str); 4] = [
+const RAW_TEMPLATES: [(&str, &str); 5] = [
     ("main.css", include_str!("templates/main.css")),
     ("main.js", include_str!("templates/main.js")),
     ("base", include_str!("templates/base.html")),
+    ("pagination", include_str!("templates/pagination.html")),
     ("search", include_str!("templates/search.html")),
 ];
 

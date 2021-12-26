@@ -8,7 +8,7 @@ mod models;
 mod templates;
 
 use crate::errors::Error;
-use crate::models::Parameters;
+use crate::models::{Pagination, Parameters};
 use crate::templates::{render, Template};
 
 use rocket::response::Redirect;
@@ -32,10 +32,12 @@ fn search(
 ) -> Result<Template, Error> {
     let params = Parameters::new(page, q, sf, sd);
     let images = api::search_images(&params)?;
+    let pagination = Pagination::new(params.page.unwrap(), images.total);
 
     let mut context = Context::new();
     context.insert("params", &params);
     context.insert("images", &images);
+    context.insert("pagination", &pagination);
     render("search", &mut context)
 }
 
