@@ -1,13 +1,13 @@
 <!doctype html>
 <html>
 <head>
+    <link rel="shortcut icon" href="https://derpicdn.net/favicon.svg">
     <style>{% include "main.css" %}</style>
     <title>{% block title %}{% endblock title %}</title>
 </head>
-
 <body>
+<!--<i class="favicon-home"></i>-->
 {% block content %}{% endblock content %}
 </body>
-
-<script>{% include "main.js" %}</script>
+{% block js %}{% endblock js %}
 </html>

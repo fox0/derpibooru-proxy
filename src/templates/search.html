@@ -9,7 +9,7 @@
   </form>
 
   {% for i in images.images %}
-    <div class="thumb">
+    <div class="thumb" data-id="{{ i.id }}" data-json="{{ i|json_encode()|escape }}">
       <span>{{ i.faves }} / [{{ i.upvotes }} {{ i.score }} {{ i.downvotes }}]</span>
       <a href="{{ i.representations.large }}" target="_blank" title="{{ i.title }}">
         {% if i.mime_type == "video/webm" %}
@@ -18,13 +18,13 @@
           <img alt="{{ i.title }}" src="{{ i.representations.thumb }}"/>
         {% endif %}
       </a>
-    <!-- в теории данные все есть, так что упаковываем в json и на статическую страницу! -->
     </div>
   {% endfor %}
 
   {% include "pagination" %}
 
-<a href="/search?q=first_seen_at.gt:3 days ago&sf=wilson_score&sd=desc">3 ddd</a>
+<a href="/search?q=first_seen_at.gt:3 days ago&sf=wilson_score&sd=desc">first_seen_at.gt:3 days ago</a>
+<a href="/search?q=my:watched">my:watched</a>
 
   <form action="/search" method="get">
     <input type="text" name="q" value="{{ params.q }}" style="width: 50%;"/>
@@ -42,3 +42,6 @@
   </form>
 {% endblock content %}
 
+{% block js %}
+<script>{% include "set.js" %}</script>
+{% endblock js %}

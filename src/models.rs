@@ -191,24 +191,13 @@ pub struct Image {
     pub title: Option<String>,
 }
 
-impl Image {
-    fn get_title(&self) -> String {
-        format!(
-            "Size: {}x{} | Tagged: {}",
-            self.width,
-            self.height,
-            self.tags.join(" ")
-        )
-    }
-}
-
 impl Serialize for Image {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
         // the number of fields in the struct.
-        let mut s = serializer.serialize_struct("Image", 8)?;
+        let mut s = serializer.serialize_struct("Image", 9)?;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("faves", &self.faves)?;
         s.serialize_field("score", &self.score)?;
@@ -217,7 +206,12 @@ impl Serialize for Image {
         s.serialize_field("representations", &self.representations)?;
         s.serialize_field("mime_type", &self.mime_type)?;
         // из-за этой строчки пришлось реализовывать трейт
-        s.serialize_field("title", &self.get_title())?;
+        let tags = self.tags.join(", ");
+        s.serialize_field("tags", &tags)?;
+        s.serialize_field(
+            "title",
+            &format!("Size: {}x{} | Tagged: {}", self.width, self.height, tags),
+        )?;
         s.end()
     }
 }
