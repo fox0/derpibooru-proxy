@@ -13,12 +13,14 @@ lazy_static! {
     };
 }
 
-const RAW_TEMPLATES: [(&str, &str); 5] = [
+const RAW_TEMPLATES: [(&str, &str); 7] = [
     ("main.css", include_str!("templates/main.css")),
     ("base", include_str!("templates/base.html")),
     ("pagination", include_str!("templates/pagination.html")),
     ("set.js", include_str!("templates/set.js")),
+    ("get.js", include_str!("templates/get.js")),
     ("search", include_str!("templates/search.html")),
+    ("image", include_str!("templates/image.html")),
 ];
 
 pub type Template = Html<String>;
